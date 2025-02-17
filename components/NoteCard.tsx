@@ -1,11 +1,12 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
-import { Trash2 } from "lucide-react";
-import { setNewOffset, autoGrow, setZIndex } from "@/lib/utils";
+import { setNewOffset, autoGrow, setZIndex, bodyParser } from "@/lib/utils";
+import { saveBody, savePosition } from "@/app/actions/cardsActions";
+import { DeleteButton } from "./DeleteButton";
 
 type NoteCardProps = {
   note: {
-    $id: number;
+    id: string;
     body: string;
     colors: string;
     position: string;
@@ -14,19 +15,40 @@ type NoteCardProps = {
 
 export function NoteCard({ note }: NoteCardProps) {
   const [position, setPosition] = useState(JSON.parse(note.position));
+  const [saving, setSaving] = useState(false); // Track if it's saving
+
   const colors = JSON.parse(note.colors);
-  const body = JSON.parse(note.body);
+  const body = bodyParser(note.body);
 
   const mouseStartPos = { x: 0, y: 0 };
 
   const cardRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const keyUpTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (textAreaRef.current) {
       autoGrow(textAreaRef.current);
     }
   }, []);
+
+  async function handleKeyUp() {
+    if (!textAreaRef.current) return;
+
+    setSaving(true); // Show the spinner
+
+    // Clear any previous timeout
+    if (keyUpTimer.current) {
+      clearTimeout(keyUpTimer.current);
+    }
+
+    // Set a timeout to save the body after 2 seconds
+    keyUpTimer.current = setTimeout(async () => {
+      if (!textAreaRef.current) return;
+      await saveBody(note.id, textAreaRef.current.value);
+      setSaving(false); // Hide the spinner after saving
+    }, 2000);
+  }
 
   function handleInput() {
     if (textAreaRef.current) {
@@ -59,9 +81,16 @@ export function NoteCard({ note }: NoteCardProps) {
     setPosition(newPosition);
   }
 
-  function mouseUp() {
+  async function mouseUp() {
+    if (!cardRef.current) return;
+    if (!textAreaRef.current) return;
+
     document.removeEventListener("mousemove", mouseMove);
     document.removeEventListener("mouseup", mouseUp);
+
+    const newPosition = setNewOffset(cardRef.current);
+    await savePosition(note.id, newPosition);
+    await saveBody(note.id, textAreaRef.current.value);
   }
 
   return (
@@ -79,10 +108,16 @@ export function NoteCard({ note }: NoteCardProps) {
         className="flex justify-between items-center rounded-md p-1"
         style={{ backgroundColor: colors.colorHeader }}
       >
-        <Trash2 className="w-5 h-5 text-black" />
+        {saving && (
+          <div className="absolute top-0 right-0 p-2">
+            <div className="w-4 h-4 border-2 border-t-transparent border-black rounded-full animate-spin"></div>
+          </div>
+        )}
+        <DeleteButton noteId={note.id} />
       </div>
       <div className="p-4 rouded-b-md">
         <textarea
+          onKeyUp={handleKeyUp}
           ref={textAreaRef}
           onInput={handleInput}
           defaultValue={body}

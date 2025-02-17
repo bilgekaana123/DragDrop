@@ -1,11 +1,15 @@
-import { fakeData as notes } from "@/data/fakeData";
+import Controls from "./Controls";
 import { NoteCard } from "./NoteCard";
+import { getAllNotes } from "@/app/actions/cardsActions";
 
-export const NotesPage = () => {
+export const NotesPage = async () => {
+  const notesData = await getAllNotes();
+
   return (
     <>
-      {notes.map((note) => (
-        <NoteCard note={note} key={note.$id} />
+      <Controls />
+      {notesData.map((notes) => (
+        <NoteCard note={{ ...notes, body: notes.body ?? "" }} key={notes.id} />
       ))}
     </>
   );

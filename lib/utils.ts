@@ -25,3 +25,12 @@ export const setZIndex = (selectedCard: HTMLDivElement) => {
     }
   });
 };
+
+export const bodyParser = (value: string) => {
+  try {
+    JSON.parse(value);
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+};
