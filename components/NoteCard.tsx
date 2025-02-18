@@ -100,7 +100,7 @@ export function NoteCard({ note, onSelect, isSelected }: NoteCardProps) {
     <div
       ref={cardRef}
       onMouseDown={mouseDown}
-      className={`card w-[400px] cursor-pointer rounded-md absolute ${isSelected ? "ring-4 ring-blue-500" : ""}`}
+      className={`card w-[400px] cursor-pointer rounded-md absolute ${isSelected ? "ring-1 ring-blue-500" : ""}`}
       style={{
         backgroundColor: colors.colorBody,
         left: `${position.x}px`,

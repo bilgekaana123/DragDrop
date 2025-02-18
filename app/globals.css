@@ -20,11 +20,31 @@ body {
 }
 
 #app {
-  background-color: #212228;
-  /* background-image: */
-  /*   linear-gradient(#292a30 0.1em, transparent 0.1em), */
-  /*   linear-gradient(90deg, #292a30 0.1em, transparent 0.1em); */
-  background-size: 4em 4em;
+  background-color: rgba(
+    245,
+    245,
+    245,
+    0.95
+  ); /* Slightly transparent light gray */
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      #ddd 0,
+      #ddd 1px,
+      transparent 1px,
+      transparent 10px
+    ),
+    /* Horizontal dashed lines */
+      repeating-linear-gradient(
+        0deg,
+        #ddd 0,
+        #ddd 1px,
+        transparent 1px,
+        transparent 10px
+      ); /* Vertical dashed lines */
+  background-size:
+    100% 10px,
+    10px 100%; /* Dashed pattern for both horizontal and vertical sides */
   height: 100vh;
   position: relative;
   overflow: auto;
