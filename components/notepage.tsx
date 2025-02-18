@@ -1,15 +1,27 @@
-import Controls from "./Controls";
+"use client";
+import SideNav from "./SideNav";
 import { NoteCard } from "./NoteCard";
-import { getAllNotes } from "@/app/actions/cardsActions";
+import { useState } from "react";
 
-export const NotesPage = async () => {
-  const notesData = await getAllNotes();
+type notesDataProps = {
+  id: string;
+  body: string | null;
+  colors: string;
+  position: string;
+};
 
+export const NotesPage = ({ notesData }: { notesData: notesDataProps[] }) => {
+  const [selectedNoteId, setSelectedNoteId] = useState<string>();
   return (
     <>
-      <Controls />
+      <SideNav selectedNoteId={selectedNoteId} />
       {notesData.map((notes) => (
-        <NoteCard note={{ ...notes, body: notes.body ?? "" }} key={notes.id} />
+        <NoteCard
+          note={{ ...notes, body: notes.body ?? "" }}
+          key={notes.id}
+          onSelect={() => setSelectedNoteId(notes.id)}
+          isSelected={selectedNoteId === notes.id}
+        />
       ))}
     </>
   );

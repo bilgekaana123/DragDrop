@@ -1,9 +1,12 @@
 import { NotesPage } from "@/components/notepage";
+import { getAllNotes } from "./actions/cardsActions";
 
-export default function Home() {
+export default async function Home() {
+  const notesData = await getAllNotes();
+
   return (
     <div id="app">
-      <NotesPage />
+      <NotesPage notesData={notesData} />
     </div>
   );
 }

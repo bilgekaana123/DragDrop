@@ -11,9 +11,11 @@ type NoteCardProps = {
     colors: string;
     position: string;
   };
+  onSelect: () => void; // New prop to handle selection
+  isSelected: boolean; // New prop to show if selected
 };
 
-export function NoteCard({ note }: NoteCardProps) {
+export function NoteCard({ note, onSelect, isSelected }: NoteCardProps) {
   const [position, setPosition] = useState(JSON.parse(note.position));
   const [saving, setSaving] = useState(false); // Track if it's saving
 
@@ -58,6 +60,7 @@ export function NoteCard({ note }: NoteCardProps) {
 
   function mouseDown(e: React.MouseEvent) {
     if (!cardRef.current) return;
+    onSelect();
     setZIndex(cardRef.current);
     mouseStartPos.x = e.clientX;
     mouseStartPos.y = e.clientY;
@@ -97,7 +100,7 @@ export function NoteCard({ note }: NoteCardProps) {
     <div
       ref={cardRef}
       onMouseDown={mouseDown}
-      className="card w-[400px] cursor-pointer rounded-md absolute"
+      className={`card w-[400px] cursor-pointer rounded-md absolute ${isSelected ? "ring-4 ring-blue-500" : ""}`}
       style={{
         backgroundColor: colors.colorBody,
         left: `${position.x}px`,

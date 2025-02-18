@@ -10,6 +10,23 @@ export async function getAllNotes() {
   return data;
 }
 
+export async function updateNoteColors(
+  id: string,
+  colors: {
+    id: string;
+    colorHeader: string;
+    colorBody: string;
+    colorText: string;
+  },
+) {
+  await db
+    .update(note)
+    .set({ colors: JSON.stringify(colors) })
+    .where(eq(note.id, id));
+
+  revalidatePath("/");
+}
+
 export async function savePosition(
   id: string,
   position: { x: number; y: number },

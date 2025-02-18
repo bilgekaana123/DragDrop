@@ -7,7 +7,7 @@ import { addNote } from "@/app/actions/cardsActions";
 import { useRef } from "react";
 
 export function AddButton() {
-  const startingPos = useRef(10);
+  const startingPos = useRef(50);
 
   const addNoteButton = async () => {
     const position = {
@@ -18,12 +18,14 @@ export function AddButton() {
     const body = "";
 
     await addNote(body, color, position);
+
+    startingPos.current += 10;
   };
 
   return (
     <button
       onClick={() => addNoteButton()}
-      className="bg-gray-500 flex justify-center items-center h-10 w-10 rounded-full cursor-pointer transition-all duration-300 hover:h-11 hover:w-11"
+      className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-gray-500 transition-all duration-300 hover:h-11 hover:w-11"
     >
       <Plus />
     </button>
