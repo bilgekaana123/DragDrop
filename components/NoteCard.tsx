@@ -11,14 +11,13 @@ type NoteCardProps = {
     colors: string;
     position: string;
   };
-  onSelect: () => void; // New prop to handle selection
-  isSelected: boolean; // New prop to show if selected
+  onSelect: () => void;
+  isSelected: boolean;
 };
 
 export function NoteCard({ note, onSelect, isSelected }: NoteCardProps) {
   const [position, setPosition] = useState(JSON.parse(note.position));
-  const [saving, setSaving] = useState(false); // Track if it's saving
-
+  const [saving, setSaving] = useState(false);
   const colors = JSON.parse(note.colors);
   const body = bodyParser(note.body);
 

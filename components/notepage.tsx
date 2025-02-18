@@ -8,9 +8,9 @@ type notesDataProps = {
   body: string | null;
   colors: string;
   position: string;
-};
+}[];
 
-export const NotesPage = ({ notesData }: { notesData: notesDataProps[] }) => {
+export const NotesPage = ({ notesData }: { notesData: notesDataProps }) => {
   const [selectedNoteId, setSelectedNoteId] = useState<string>();
   return (
     <>
